@@ -23,6 +23,7 @@ export interface BucketCreateRequest {
 }
 
 export interface BucketPatchRequest {
+  id: string;
   label?: string;
   data?: BucketItem[];
 }

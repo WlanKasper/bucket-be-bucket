@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
 import { Bucket, BucketCreateRequest, BucketPatchRequest } from './bucket.model';
 import { BucketService } from './bucket.service';
 
@@ -46,8 +46,8 @@ export class BucketController {
 
   // ---------- UPDATE/PATCH ----------
 
-  @Patch()
-  public async patchBucketByID(@Query('id') id: string, @Body() requestBody: BucketPatchRequest): Promise<Bucket> {
+  @Patch(':id')
+  public async patchBucketByID(@Param('id') id: string, @Body() requestBody: BucketPatchRequest): Promise<Bucket> {
     try {
       const patchedBucket = await this.bucketService.patchBucketByID(id, requestBody);
       this.logger.log(`Bucket patched with ID: ${patchedBucket.id}`);
@@ -61,7 +61,7 @@ export class BucketController {
   // ---------- DELETE ----------
 
   @Delete()
-  public async deleteBucketByID(@Query('id') id: string): Promise<Bucket> {
+  public async deleteBucketByID(@Param('id') id: string): Promise<Bucket> {
     try {
       const deletedBucket = await this.bucketService.deleteBucketByID(id);
       this.logger.log(`Bucket deleted with ID: ${deletedBucket.id}`);

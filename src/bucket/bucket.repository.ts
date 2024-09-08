@@ -12,7 +12,7 @@ export class BucketRepository {
 
   public async create(request: BucketCreateRequest): Promise<BucketDocument> {
     return this.bucketModel.create({
-      lable: request.label,
+      label: request.label,
       data: request.data,
     });
   }
@@ -41,10 +41,10 @@ export class BucketRepository {
       .findByIdAndUpdate(
         id,
         {
-          lable: request.label,
+          label: request.label,
           data: request.data,
         },
-        { upsert: false },
+        { new: true },
       )
       .exec();
   }
