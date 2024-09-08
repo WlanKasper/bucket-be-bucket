@@ -1,0 +1,4 @@
+export const DB_CONSTANTS = {
+  DEFAULT: 'DEFAULT',
+  IN_MEMORY: 'IN_MEMORY',
+};
