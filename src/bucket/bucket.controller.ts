@@ -11,23 +11,15 @@ export class BucketController {
   // ---------- CREATE ----------
 
   @Post()
-  public async createBucket(@Body() requestBody: BucketCreateRequest[]): Promise<Bucket[]> {
-    const createdBucketList: Bucket[] = [];
-
-    const createBucketPromises = requestBody.map(async (request) => {
-      try {
-        const createdBucket = await this.bucketService.createBucket(request);
-        this.logger.log(`Bucket created with ID: ${createdBucket.id}`);
-        createdBucketList.push(createdBucket);
-      } catch (error) {
-        this.logger.error(`Error creating bucket: ${error.message}`);
-        throw error;
-      }
-    });
-
-    await Promise.all(createBucketPromises);
-
-    return createdBucketList;
+  public async createBucket(@Body() requestBody: BucketCreateRequest): Promise<Bucket> {
+    try {
+      const createdBucket = await this.bucketService.createBucket(requestBody);
+      this.logger.log(`Bucket created with ID: ${createdBucket.id}`);
+      return createdBucket;
+    } catch (error) {
+      this.logger.error(`Error creating bucket: ${error.message}`);
+      throw error;
+    }
   }
 
   // ---------- READ ----------
@@ -60,7 +52,7 @@ export class BucketController {
 
   // ---------- DELETE ----------
 
-  @Delete()
+  @Delete(':id')
   public async deleteBucketByID(@Param('id') id: string): Promise<Bucket> {
     try {
       const deletedBucket = await this.bucketService.deleteBucketByID(id);
