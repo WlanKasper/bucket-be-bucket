@@ -8,7 +8,7 @@ export const rootMongooseModule = () =>
     useFactory: async (config: ConfigService) => {
       return {
         dbName: 'bucket',
-        uri: config.get('MONGO_URI')
+        uri: config.get('MONGO_URI') || "mongodb://mongo:27017"
       };
     },
     inject: [ConfigService],
