@@ -6,7 +6,9 @@ export class Bucket {
   id: ObjectId;
 
   @Prop({ required: true })
-  label: string;
+  name: string;
+  @Prop({ required: true })
+  description: string;
   @Prop({ required: true, default: [] })
   data: BucketItem[];
 }
@@ -18,13 +20,15 @@ export interface BucketItem {
 }
 
 export interface BucketCreateRequest {
-  label: string;
+  name: string;
+  description: string;
   data?: BucketItem[];
 }
 
 export interface BucketPatchRequest {
   id: string;
-  label?: string;
+  name?: string;
+  description?: string;
   data?: BucketItem[];
 }
 

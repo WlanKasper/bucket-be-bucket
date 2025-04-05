@@ -1,20 +1,9 @@
-# How to start
-MongoDB for Mac
-```bash
-brew tap mongodb/brew
-brew update
-brew install mongodb-community@7.0
-brew services start mongodb-community@7.0
-```
+# Backend project for Bucket application
+## How to start application
+## How to start database
+- URI -> mongodb://localhost:27017
 
-Project start
-```bash
-npm i
-npm run start
-```
-# How to deploy
-On server run
-```bash
-npm run build
-pm2 --name "eventus.server.laryokkk.com" start dist/main.js
-```
+gcloud run deploy be-bucket \
+  --source . \
+  --region europe-west8 \
+  --set-env-vars "MONGO_URI=mongodb+srv://wlankasper:Laryokkk_9.9@cluster-bucket.s7rve.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-bucket"

@@ -2,17 +2,8 @@ version: "3.8"
 services:
   app:
     build: .
+    image: bucket-be:latest
     ports:
       - "8080:8080"
-    depends_on:
-      - mongo
     environment:
-      - MONGO_URI=mongodb://mongo:27017/bucket
-    command: /usr/local/bin/wait-for-it.sh mongo:27017 -- node dist/main.js
-
-  mongo:
-    image: mongo:5
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/db:/data/db
+      - MONGO_URI=localhost:27017

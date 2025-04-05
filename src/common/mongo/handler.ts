@@ -6,9 +6,11 @@ export const rootMongooseModule = () =>
   MongooseModule.forRootAsync({
     connectionName: DB_CONSTANTS.DEFAULT,
     useFactory: async (config: ConfigService) => {
+      console.log(config.get('MONGO_URI'));
+      
       return {
         dbName: 'bucket',
-        uri: config.get('MONGO_URI') || "mongodb://mongo:27017"
+        uri: config.get('MONGO_URI')
       };
     },
     inject: [ConfigService],

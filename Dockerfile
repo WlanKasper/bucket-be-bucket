@@ -53,13 +53,6 @@ FROM node:18-alpine AS production
 
 WORKDIR /usr/src/app
 
-# Install bash
-RUN apk add --no-cache bash
-
-# Download wait-for-it script
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /usr/local/bin/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it.sh
-
 # Copy the bundled code from the build stage to the production image
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
@@ -67,8 +60,5 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 # Expose your application port
 EXPOSE 8080
 
-# Use tini as the init system to manage your Node.js app
-# ENTRYPOINT ["/sbin/tini", "--"]
-
 # Start your Node.js application
-CMD ["bash", "-c", "node dist/main.js"]
+CMD ["node", "dist/main.js"]

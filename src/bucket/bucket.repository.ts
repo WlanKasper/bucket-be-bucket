@@ -12,7 +12,8 @@ export class BucketRepository {
 
   public async create(request: BucketCreateRequest): Promise<BucketDocument> {
     return this.bucketModel.create({
-      label: request.label,
+      name: request.name,
+      description: request.description,
       data: request.data,
     });
   }
@@ -41,7 +42,8 @@ export class BucketRepository {
       .findByIdAndUpdate(
         id,
         {
-          label: request.label,
+          name: request.name,
+          description: request.description,
           data: request.data,
         },
         { new: true },
