@@ -31,8 +31,6 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=build /usr/src/app/dist ./dist
 
-COPY --from=build /usr/src/app/.env ./
-
 USER node
 
 EXPOSE 80
