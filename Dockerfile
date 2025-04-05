@@ -33,5 +33,5 @@ COPY --from=build /usr/src/app/dist ./dist
 
 USER node
 
-EXPOSE 8080
+EXPOSE 80
 CMD ["node", "dist/main"]
