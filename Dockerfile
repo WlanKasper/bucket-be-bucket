@@ -58,7 +58,7 @@ COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
 # Expose your application port
-EXPOSE 8080
+EXPOSE 80
 
 # Start your Node.js application
 CMD ["node", "dist/main.js"]
