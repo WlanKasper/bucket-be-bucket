@@ -7,7 +7,7 @@ export const rootMongooseModule = () =>
     connectionName: DB_CONSTANTS.DEFAULT,
     useFactory: async (config: ConfigService) => {
       console.log(config.get('MONGO_URI'));
-      
+
       return {
         dbName: 'bucket',
         uri: config.get('MONGO_URI')

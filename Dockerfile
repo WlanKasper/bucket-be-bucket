@@ -1,64 +1,39 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
+# -------------------------
+# Base Stage (dependencies)
+# -------------------------
+FROM node:18-alpine AS base
 
-FROM node:18-alpine AS development
-
-# Create app directory
 WORKDIR /usr/src/app
 
-# Copy application dependency manifests to the container image.
-COPY --chown=node:node package*.json ./
-
-# Install app dependencies
+COPY package*.json ./
 RUN npm ci
 
-# Bundle app source
-COPY --chown=node:node . .
+COPY . .
 
-# Use the node user from the image (instead of the root user)
-USER node
+# -------------------------
+# Build Stage
+# -------------------------
+FROM base AS build
 
-###################
-# BUILD FOR PRODUCTION
-###################
-
-FROM node:18-alpine AS build
-
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-# Copy node_modules from the development stage
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
-
-COPY --chown=node:node . .
-
-# Run the build command which creates the production bundle
 RUN npm run build
 
-# Set NODE_ENV environment variable
-ENV NODE_ENV=production
-
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-USER node
-
-###################
-# PRODUCTION
-###################
-
+# -------------------------
+# Production Stage
+# -------------------------
 FROM node:18-alpine AS production
 
 WORKDIR /usr/src/app
 
-# Copy the bundled code from the build stage to the production image
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+ENV NODE_ENV=production
 
-# Expose your application port
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+COPY --from=build /usr/src/app/dist ./dist
+
+COPY --from=build /usr/src/app/.env ./
+
+USER node
+
 EXPOSE 80
-
-# Start your Node.js application
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/main"]
