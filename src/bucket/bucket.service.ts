@@ -15,17 +15,17 @@ export class BucketService {
 
   // ---------- READ ----------
 
-  public async getBucketList(): Promise<Bucket[]> {
-    return await this.repo.findAll();
+  public async getBucketList(userId: string): Promise<Bucket[]> {
+    return await this.repo.findAll(userId);
   }
 
   // ---------- UPDATE/PATCH ----------
 
-  public async patchBucketByID(id: string | Types.ObjectId, request: BucketPatchRequest): Promise<Bucket> {
-    const patchedBucket = await this.repo.patchByID(id, request);
+  public async patchBucketByID(request: BucketPatchRequest): Promise<Bucket> {
+    const patchedBucket = await this.repo.patchByID(request);
 
     if (!patchedBucket) {
-      throw new NotFoundException(`Bucket with ID ${id} not found!`);
+      throw new NotFoundException(`Bucket with ID ${request.id} not found!`);
     }
 
     return patchedBucket;

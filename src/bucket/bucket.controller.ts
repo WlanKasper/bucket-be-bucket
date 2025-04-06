@@ -24,10 +24,11 @@ export class BucketController {
 
   // ---------- READ ----------
 
-  @Get()
-  public async getBucketList(): Promise<Bucket[]> {
+  @Get(':user_id')
+  public async getBucketList(@Param('user_id') user_id: string): Promise<Bucket[]> {
     try {
-      const bucketList = await this.bucketService.getBucketList();
+      this.logger.log(`Getting bucket list for user: ${user_id}`);
+      const bucketList = await this.bucketService.getBucketList(user_id);
       this.logger.log(`Retrieved ${bucketList.length} buckets`);
       return bucketList;
     } catch (error) {
@@ -39,9 +40,9 @@ export class BucketController {
   // ---------- UPDATE/PATCH ----------
 
   @Patch(':id')
-  public async patchBucketByID(@Param('id') id: string, @Body() requestBody: BucketPatchRequest): Promise<Bucket> {
+  public async patchBucketByID(@Body() requestBody: BucketPatchRequest): Promise<Bucket> {
     try {
-      const patchedBucket = await this.bucketService.patchBucketByID(id, requestBody);
+      const patchedBucket = await this.bucketService.patchBucketByID(requestBody);
       this.logger.log(`Bucket patched with ID: ${patchedBucket.id}`);
       return patchedBucket;
     } catch (error) {

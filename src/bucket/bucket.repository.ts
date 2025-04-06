@@ -12,6 +12,7 @@ export class BucketRepository {
 
   public async create(request: BucketCreateRequest): Promise<BucketDocument> {
     return this.bucketModel.create({
+      userId: request.userId,
       name: request.name,
       description: request.description,
       data: request.data,
@@ -24,24 +25,24 @@ export class BucketRepository {
     return this.bucketModel.findById(id).exec();
   }
 
-  public async findAll(): Promise<Bucket[]> {
-    return this.bucketModel.find().exec();
+  public async findAll(userId: string): Promise<Bucket[]> {
+    return this.bucketModel.find({ userId }).exec();
   }
 
   // ---------- UPDATE/PATCH ----------
 
   public async patchByID(
-    id: string | Types.ObjectId,
-    request: BucketPatchRequest,
+    request: BucketPatchRequest
   ): Promise<BucketDocument | undefined> {
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(request.id)) {
       return undefined;
     }
 
     return this.bucketModel
       .findByIdAndUpdate(
-        id,
+       request.id,
         {
+          userId: request.userId,
           name: request.name,
           description: request.description,
           data: request.data,
