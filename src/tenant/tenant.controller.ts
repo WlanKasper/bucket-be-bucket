@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Patch, Post } from '@nestjs/common';
 import { Tenant, TenantCreateRequest, TenantPatchRequest } from './tenant.model';
 import { TenantService } from './tenant.service';
 
@@ -40,18 +40,6 @@ export class TenantController {
       return tenant;
     } catch (error) {
       this.logger.error(`Error patching tenant by ID: ${error.message}`);
-      throw error;
-    }
-  }
-
-  @Delete(':id')
-  public async deleteTenantById(@Param('id') id: number): Promise<Tenant> {
-    try {
-      const tenant = await this.tenantService.deleteTenantById(id);
-      this.logger.log(`Tenant deleted with ID: ${tenant.id}`);
-      return tenant;
-    } catch (error) {
-      this.logger.error(`Error deleting tenant by ID: ${error.message}`);
       throw error;
     }
   }

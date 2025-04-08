@@ -7,7 +7,9 @@ export class TenantService {
   constructor(private readonly repo: TenantRepository) {}
 
   public async createTenant(request: TenantCreateRequest): Promise<Tenant> {
-    return await this.repo.create(request);
+    const tenant = await this.repo.create(request);
+    
+    return tenant;
   }
 
   public async getTenantById(id: number): Promise<Tenant> {
@@ -21,23 +23,22 @@ export class TenantService {
   }
 
   public async patchTenantById(id: number, request: TenantPatchRequest): Promise<Tenant> {
-    const patchedTenant = await this.repo.patchById(id, request);
+    const tenant = await this.repo.patchById(id, request);
 
-    if (!patchedTenant) {
+    if (!tenant) {
       throw new NotFoundException(`Tenant with ID ${id} not found!`);
     }
 
-    return patchedTenant;
+    return tenant;
   }
 
   public async deleteTenantById(id: number): Promise<Tenant> {
-    const deletedTenant = await this.repo.deleteById(id);
+    const tenant = await this.repo.deleteById(id);
 
-    if (!deletedTenant) {
+    if (!tenant) {
       throw new NotFoundException(`Tenant with ID ${id} not found!`);
     }
 
-    return deletedTenant;
+    return tenant;
   }
-  
 }

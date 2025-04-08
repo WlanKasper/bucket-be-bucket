@@ -7,34 +7,20 @@ import { Tenant, TenantCreateRequest, TenantDocument, TenantPatchRequest } from 
 export class TenantRepository {
   constructor(@InjectModel(Tenant.name, 'DEFAULT') private tenantModel: Model<TenantDocument>) {}
 
-  public async create(request: TenantCreateRequest): Promise<TenantDocument> {
-    return this.tenantModel.create({
-      id: request.id,
-      first_name: request.first_name,
-      last_name: request.last_name,
-      avatar_url: request.avatar_url,
-    });
+  public async create(data: TenantCreateRequest): Promise<Tenant> {
+    const tenant = new this.tenantModel(data);
+    return tenant.save();
   }
 
-  public async findById(id: number): Promise<TenantDocument | undefined> {
-    return this.tenantModel.findById(id).exec();
+  public async findById(id: number): Promise<Tenant | null> {
+    return this.tenantModel.findOne({ id }).populate('catalogs').exec();
   }
 
-  public async patchById(id: number, request: TenantPatchRequest): Promise<TenantDocument | undefined> {
-    return this.tenantModel
-      .findByIdAndUpdate(
-        id,
-        {
-          first_name: request.first_name,
-          last_name: request.last_name,
-          avatar_url: request.avatar_url,
-        },
-        { new: true },
-      )
-      .exec();
+  public async patchById(id: number, updates: TenantPatchRequest): Promise<Tenant | null> {
+    return this.tenantModel.findOneAndUpdate({ id }, updates, { new: true }).populate('catalogs').exec();
   }
 
-  public async deleteById(id: number): Promise<TenantDocument | undefined> {
-    return this.tenantModel.findByIdAndDelete(id, { returnDocument: 'before' }).exec();
+  public async deleteById(id: number): Promise<Tenant | null> {
+    return this.tenantModel.findOneAndDelete({ id }).populate('catalogs').exec();
   }
 }

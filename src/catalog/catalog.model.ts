@@ -1,39 +1,32 @@
-import { Item } from "@/item/item.model";
-import { Tenant } from "@/tenant/tenant.model";
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
-import { Schema, Types } from "mongoose";
+import { Item } from '@/item/item.model';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-export class Catalog {
-    id: Types.ObjectId;
+@Schema({ timestamps: true })
+export class Catalog extends Document  {
+  @Prop({ required: true })
+  name: string;
 
-    @Prop({ required: true , default: [] })
-    tenants: Tenant[];
+  @Prop({ required: true })
+  description: string;
 
-    @Prop({ required: true })
-    name: string;
-
-    @Prop({ required: false })
-    description: string;
-
-    @Prop({ required: true, default: [] })
-    items: Item[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Item' }], default: [] })
+  items: Item[];
 }
 
 export interface CatalogCreateRequest {
-    tenants: number[];
-    name: string;
-    description: string;
-    items: Item[];
+  name: string;
+  description: string;
+  items?: Item[];
 }
 
 export interface CatalogPatchRequest {
-    tenants?: number[];
-    name?: string;
-    description?: string;
-    items?: Item[];
+  name?: string;
+  description?: string;
+  items?: Item[];
 }
 
 export type CatalogDocument = Catalog & Document;
-export type CatalogRef = Catalog | Schema.Types.ObjectId;
+export type CatalogRef = Catalog | Types.ObjectId;
 
 export const CatalogSchema = SchemaFactory.createForClass(Catalog);

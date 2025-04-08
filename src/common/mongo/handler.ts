@@ -9,7 +9,7 @@ export const rootMongooseModule = () =>
       console.log(config.get('MONGO_URI'));
 
       return {
-        dbName: 'bucket',
+        dbName: 'todozy_db',
         uri: config.get('MONGO_URI')
       };
     },

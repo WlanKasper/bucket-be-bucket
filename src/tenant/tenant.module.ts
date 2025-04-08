@@ -6,15 +6,24 @@ import { Tenant, TenantSchema } from './tenant.model';
 import { TenantRepository } from './tenant.repository';
 import { TenantController } from './tenant.controller';
 import { TenantService } from './tenant.service';
+import { Catalog, CatalogSchema } from '@/catalog/catalog.model';
+import { Item, ItemSchema } from '@/item/item.model';
 
 @Module({
   imports: [
     HttpModule,
     CommonModule,
-    MongooseModule.forFeature([{ name: Tenant.name, schema: TenantSchema }], 'DEFAULT'),
+    MongooseModule.forFeature(
+      [
+        { name: Tenant.name, schema: TenantSchema },
+        { name: Catalog.name, schema: CatalogSchema },
+        { name: Item.name, schema: ItemSchema },
+      ],
+      'DEFAULT',
+    ),
   ],
   controllers: [TenantController],
   providers: [TenantService, TenantRepository],
   exports: [TenantService, TenantRepository],
 })
-export class BucketModule {}
+export class TenantModule {}

@@ -7,33 +7,24 @@ import { Catalog, CatalogCreateRequest, CatalogDocument, CatalogPatchRequest } f
 export class CatalogRepository {
   constructor(@InjectModel(Catalog.name, 'DEFAULT') private catalogModel: Model<CatalogDocument>) {}
 
-  public async create(request: CatalogCreateRequest): Promise<CatalogDocument> {
-    return this.catalogModel.create({
-      name: request.name,
-      description: request.description
-    });
+  public async create(request: CatalogCreateRequest): Promise<Catalog> {
+    const catalog = new this.catalogModel(request);
+    return catalog.save();
   }
 
-  public async findById(id: Types.ObjectId): Promise<CatalogDocument | undefined> {
-    return this.catalogModel.findById(id).exec();
+  public async findById(id: string | Types.ObjectId): Promise<Catalog | null> {
+    return this.catalogModel.findById(id).populate('items').exec();
   }
 
-  public async patchById(id: Types.ObjectId, request: CatalogPatchRequest): Promise<CatalogDocument | undefined> {
-    return this.catalogModel
-      .findByIdAndUpdate(
-        id,
-        {
-          tenants: request.tenants,
-          name: request.name,
-          description: request.description,
-          items: request.items,
-        },
-        { new: true },
-      )
-      .exec();
+  public async patchById(id: string | Types.ObjectId, request: CatalogPatchRequest): Promise<Catalog | null> {
+    const updatePayload: Partial<Catalog> = {
+      ...request,
+    };
+
+    return this.catalogModel.findByIdAndUpdate(id, updatePayload, { new: true }).populate('items').exec();
   }
 
-  public async deleteById(id: Types.ObjectId): Promise<CatalogDocument | undefined> {
-    return this.catalogModel.findByIdAndDelete(id, { returnDocument: 'before' }).exec();
+  public async deleteById(id: string | Types.ObjectId): Promise<Catalog | null> {
+    return this.catalogModel.findByIdAndDelete(id, { returnDocument: 'before' }).populate('items').exec();
   }
 }
